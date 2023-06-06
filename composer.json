@@ -1,0 +1,17 @@
+{
+  "name": "avinash/freegift",
+  "description": "Adds a product to cart as free product on when cart has offer product and has value above set figure",
+  "type": "magento2-module",
+  "version": "1.0.0",
+  "license": [
+    "MIT"
+  ],
+  "autoload": {
+    "psr-4": {
+      "Avinash\\FreeGift\\": ""
+    },
+    "files": [
+      "registration.php"
+    ]
+  }
+}
