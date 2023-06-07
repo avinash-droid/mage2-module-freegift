@@ -2,11 +2,33 @@
 
 namespace Avinash\FreeGift\Observer;
 
+/**
+ * CheckoutCartSaveAfter class
+ *
+ * Observer for event checkout_cart_save_after
+ */
 class CheckoutCartSaveAfter implements \Magento\Framework\Event\ObserverInterface
 {
+    /**
+     * For debugging
+     *
+     * @var \Psr\Log\LoggerInterface
+     */
     protected $logger;
+
+    /**
+     * FreeGift helper
+     *
+     * @var \Avinash\FreeGift\Helper\Data
+     */
     protected $helper;
 
+    /**
+     * Class constructor
+     *
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Avinash\FreeGift\Helper\Data $helper
+     */
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         \Avinash\FreeGift\Helper\Data $helper
@@ -15,6 +37,12 @@ class CheckoutCartSaveAfter implements \Magento\Framework\Event\ObserverInterfac
         $this->helper = $helper;
     }
 
+    /**
+     * Applies or removes freegift depending on if cart rule is applied
+     *
+     * @param \Magento\Framework\Event\Observer $observer
+     * @return void
+     */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         /** @var \Magento\Checkout\Model\Cart $data */

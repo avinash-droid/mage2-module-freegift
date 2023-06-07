@@ -4,15 +4,36 @@ namespace Avinash\FreeGift\Observer;
 
 use Magento\Quote\Model\QuoteFactory;
 
+/**
+ * SalesOrderSaveBefore class
+ *
+ * Observer for sales_order_save_before event
+ */
 class SalesOrderSaveBefore implements \Magento\Framework\Event\ObserverInterface
 {
+    /**
+     * Gets quote model
+     *
+     * @var \Magento\Quote\Model\QuoteFactory
+     */
     protected $quoteFactory;
 
+    /**
+     * Class constructor
+     *
+     * @param QuoteFactory $quoteFactory
+     */
     public function __construct(QuoteFactory $quoteFactory)
     {
         $this->quoteFactory = $quoteFactory;
     }
 
+    /**
+     * Set quote items additional option to order item
+     *
+     * @param \Magento\Framework\Event\Observer $observer
+     * @return void
+     */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         /** @var \Magento\Sales\Model\Order $order */

@@ -10,15 +10,35 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 
 class InstallData implements InstallDataInterface
 {
+    /**
+     * Setup Factory
+     *
+     * @var \Magento\Eav\Setup\EavSetupFactory
+     */
     private $eavSetupFactory;
 
+    /**
+     * Class constructor
+     *
+     * @param EavSetupFactory $eavSetupFactory
+     */
     public function __construct(EavSetupFactory $eavSetupFactory)
     {
         $this->eavSetupFactory = $eavSetupFactory;
     }
 
+    /**
+     * Install method
+     *
+     * Adds FreeGift module relate product attributes
+     *
+     * @param ModuleDataSetupInterface $setup
+     * @param ModuleContextInterface $context
+     * @return void
+     */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
+        /** @var \Magento\Eav\Setup\EavSetup $eavSetup */
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
 
         $attributeGroup = "Free Gift Offer Group";

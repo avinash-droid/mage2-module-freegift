@@ -9,15 +9,55 @@ use Avinash\FreeGift\Model\Config\Source\FreeGiftOfferOptions;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\Serialize\SerializerInterface;
 
+/**
+ * FreeGift Helper class
+ */
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
+    /**
+     *
+     * @var \Magento\Framework\Serialize\SerializerInterface $_serializer
+     */
     private $_serializer;
 
+    /**
+     * Magento checkout session
+     *
+     * @var \Magento\Checkout\Model\Session $_session
+     */
     protected $_session;
+
+    /**
+     * Repository for Product
+     *
+     * @var \Magento\Catalog\Api\ProductRepositoryInterface $_productRepository
+     */
     protected $_productRepository;
+
+    /**
+     * Magento Search Criteria Builder
+     *
+     * @var \Magento\Framework\Api\SearchCriteriaBuilder $_searchCriteriaBuilder
+     */
     protected $_searchCriteriaBuilder;
+    
+    /**
+     * Magento Sort Order Builder
+     *
+     * @var \Magento\Framework\Api\SortOrderBuilder $_sortOrderBuilder
+     */
     protected $_sortOrderBuilder;
 
+    /**
+     * Class constructor
+     *
+     * @param \Magento\Framework\App\Helper\Context $context
+     * @param Session $session
+     * @param ProductRepositoryInterface $productRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param SortOrderBuilder $sortOrderBuilder
+     * @param SerializerInterface $serializer
+     */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         Session $session,
@@ -34,6 +74,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         parent::__construct($context);
     }
 
+    /**
+     * Add free gift to cart if eligible
+     *
+     * @return void
+     */
     public function applyFreeGift()
     {
         $quote = $this->_session->getQuote();
@@ -46,6 +91,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $this->addFreeGiftProduct($quote);
     }
 
+    /**
+     * Remove added free gift from cart
+     *
+     * @return void
+     */
     public function removeFreeGift()
     {
         $quote = $this->_session->getQuote();
@@ -74,6 +124,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_logger->debug("Free gift removed.");
     }
 
+    /**
+     * Check if cart has offer product and is eligible for free gift.
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return void
+     */
     protected function quoteHasFreeGiftOfferProduct(\Magento\Quote\Model\Quote $quote)
     {
         $quoteItems = $quote->getAllItems();
@@ -87,6 +143,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return !empty($products);
     }
 
+    /**
+     * Add eligible free gift product to cart.
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return void
+     */
     protected function addFreeGiftProduct(\Magento\Quote\Model\Quote $quote)
     {
         if ($quote->getFreeGiftProduct() != 0) {
@@ -132,7 +194,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $quoteItem->setBaseDiscountAmount($freeProduct->getPrice());
         $quoteItem->getProduct()->setIsSuperMode(true);
 
-        $additionalOptions = array();
+        $additionalOptions = [];
         if ($additionalOption = $quoteItem->getOptionByCode('additional_options')) {
             $additionalOptions = $this->_serializer->unserialize($additionalOption->getValue());
         }
@@ -140,11 +202,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             'label' => 'Offer',
             'value' => "Free Gift"
         ];
-        $quoteItem->addOption(array(
+        $quoteItem->addOption([
             'product_id' => $quoteItem->getProductId(),
             'code' => 'additional_options',
             'value' => $this->_serializer->serialize($additionalOptions)
-        ));
+        ]);
 
         $quoteItem->save();
     }

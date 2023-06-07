@@ -5,12 +5,41 @@ namespace Avinash\FreeGift\Model\Total;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 
+/**
+ * FreegiftDiscount class
+ *
+ * Calculate FreeGift discount
+ */
 class FreegiftDiscount extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
 {
+    /**
+     * Currency convertion
+     *
+     * @var \Magento\Framework\Pricing\PriceCurrencyInterface
+     */
     protected $_priceCurrency;
+
+    /**
+     * Product repo
+     *
+     * @var \Magento\Catalog\Api\ProductRepositoryInterface
+     */
     protected $productRepository;
+
+    /**
+     * For debugging
+     *
+     * @var \Psr\Log\LoggerInterface
+     */
     protected $logger;
 
+    /**
+     * Class construtor
+     *
+     * @param PriceCurrencyInterface $priceCurrency
+     * @param ProductRepositoryInterface $productRepository
+     * @param \Psr\Log\LoggerInterface $logger
+     */
     public function __construct(
         PriceCurrencyInterface $priceCurrency,
         ProductRepositoryInterface $productRepository,
@@ -21,6 +50,14 @@ class FreegiftDiscount extends \Magento\Quote\Model\Quote\Address\Total\Abstract
         $this->logger = $logger;
     }
 
+    /**
+     * Calculates freegift discount
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     * @return FreegiftDiscount
+     */
     public function collect(
         \Magento\Quote\Model\Quote $quote,
         \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment,
@@ -43,6 +80,13 @@ class FreegiftDiscount extends \Magento\Quote\Model\Quote\Address\Total\Abstract
         return $this;
     }
 
+    /**
+     * Gets FreeGift discount details
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     * @return array
+     */
     public function fetch(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Address\Total $total)
     {
         if (!$quote->getFreeGiftProduct()) {
@@ -59,7 +103,8 @@ class FreegiftDiscount extends \Magento\Quote\Model\Quote\Address\Total\Abstract
     }
 
     /**
-     * get label
+     * Get label
+     *
      * @return string
      */
     public function getLabel()

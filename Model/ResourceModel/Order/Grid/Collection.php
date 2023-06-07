@@ -13,8 +13,16 @@ use Psr\Log\LoggerInterface as Logger;
  */
 class Collection extends OriginalCollection
 {
-    protected $helper;
-
+    /**
+     * Class constructor
+     *
+     * @param EntityFactory $entityFactory
+     * @param Logger $logger
+     * @param FetchStrategy $fetchStrategy
+     * @param EventManager $eventManager
+     * @param string $mainTable
+     * @param string $resourceModel
+     */
     public function __construct(
         EntityFactory $entityFactory,
         Logger $logger,
@@ -26,6 +34,11 @@ class Collection extends OriginalCollection
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
     }
 
+    /**
+     * Joins table to get FreeGift product SKU
+     *
+     * @return void
+     */
     protected function _renderFiltersBefore()
     {
         $salesOrderTable = $this->getTable('sales_order');
